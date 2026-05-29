@@ -1,4 +1,4 @@
-import Silk from "./components/silk";
+import Silk from "./components/Silk";
 import Navbar from "./sections/Navbar";
 import Hero from "./sections/Hero";
 import SpatialMap from "./sections/SpatialMap";
