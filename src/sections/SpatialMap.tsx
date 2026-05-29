@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Zap, Snowflake, VolumeX, MapPin } from 'lucide-react';
+import { Zap, Snowflake, VolumeX } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 

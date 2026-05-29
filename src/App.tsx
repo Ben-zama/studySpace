@@ -1,3 +1,4 @@
+// @ts-expect-error - Silk component lacks type definitions
 import Silk from "./components/Silk";
 import Navbar from "./sections/Navbar";
 import Hero from "./sections/Hero";
