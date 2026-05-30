@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Download } from 'lucide-react';
+import { Menu, X, Download, User as UserIcon, LogOut } from 'lucide-react';
+import { useAuth } from '../hooks/use-auth';
+import { Link } from 'react-router';
 
 const navLinks = [
   { label: 'Features', href: '#features' },
@@ -11,6 +13,7 @@ const navLinks = [
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -67,11 +70,30 @@ export default function Navbar() {
           ))}
         </div>
 
-        <div className="hidden md:block">
-          <button className="bg-teal text-navy font-bold text-sm px-5 py-2.5 rounded-full flex items-center gap-2 hover:brightness-105 active:scale-[0.98] transition-all">
-            <Download size={16} />
-            Download App
-          </button>
+        <div className="hidden md:flex items-center gap-4">
+          {user ? (
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-medium text-navy/70 flex items-center gap-2">
+                <UserIcon size={16} />
+                {user.name}
+              </span>
+              <button 
+                onClick={() => logout()}
+                className="bg-red-50 text-red-500 font-bold text-sm px-5 py-2.5 rounded-full flex items-center gap-2 hover:bg-red-100 active:scale-[0.98] transition-all"
+              >
+                <LogOut size={16} />
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link 
+              to="/auth"
+              className="bg-teal text-navy font-bold text-sm px-5 py-2.5 rounded-full flex items-center gap-2 hover:brightness-105 active:scale-[0.98] transition-all"
+            >
+              <UserIcon size={16} />
+              Login / Sign Up
+            </Link>
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -96,10 +118,33 @@ export default function Navbar() {
               {link.label}
             </a>
           ))}
-          <button className="bg-teal text-navy font-bold text-sm px-5 py-2.5 rounded-full flex items-center justify-center gap-2 hover:brightness-105 transition-all">
-            <Download size={16} />
-            Download App
-          </button>
+          
+          <div className="h-px w-full bg-navy/10 my-2"></div>
+          
+          {user ? (
+            <>
+              <div className="flex items-center gap-2 text-navy font-medium">
+                <UserIcon size={16} />
+                {user.name}
+              </div>
+              <button 
+                onClick={() => { logout(); setMenuOpen(false); }}
+                className="bg-red-50 text-red-500 font-bold text-sm px-5 py-2.5 rounded-full flex items-center justify-center gap-2 hover:bg-red-100 transition-all mt-2"
+              >
+                <LogOut size={16} />
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link 
+              to="/auth"
+              onClick={() => setMenuOpen(false)}
+              className="bg-teal text-navy font-bold text-sm px-5 py-2.5 rounded-full flex items-center justify-center gap-2 hover:brightness-105 transition-all mt-2"
+            >
+              <UserIcon size={16} />
+              Login / Sign Up
+            </Link>
+          )}
         </div>
       )}
     </header>

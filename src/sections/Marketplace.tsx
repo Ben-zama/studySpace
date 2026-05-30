@@ -83,7 +83,7 @@ export default function Marketplace() {
     <section
       id="marketplace"
       ref={sectionRef}
-      className="relative py-20 lg:py-28 bg-pale-gray"
+      className="relative py-32 lg:py-40 bg-pale-gray"
       style={{ zIndex: 2 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -162,7 +162,7 @@ export default function Marketplace() {
                 key={product.name}
                 className="product-card bg-white rounded-3xl overflow-hidden shadow-card hover:shadow-card-hover transition-all group"
               >
-                <div className="gallery-item aspect-square md:aspect-[3/4]">
+                <div className="gallery-item aspect-square">
                   <img
                     src={product.image}
                     alt={product.name}

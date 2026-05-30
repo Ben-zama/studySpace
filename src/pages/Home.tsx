@@ -1,20 +1,19 @@
-import { useState } from 'react'
-import '../App.css'
+import Hero from "../sections/Hero";
+import SpatialMap from "../sections/SpatialMap";
+import Pricing from "../sections/Pricing";
+import Marketplace from "../sections/Marketplace";
+import GreenStudy from "../sections/GreenStudy";
+import Footer from "../sections/Footer";
 
 export default function Home() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-    </>
-  )
+    <main>
+      <Hero />
+      <SpatialMap />
+      <Pricing />
+      <Marketplace />
+      <GreenStudy />
+      <Footer />
+    </main>
+  );
 }

@@ -17,19 +17,70 @@ interface Desk {
   isSilent: boolean;
 }
 
-const desks: Desk[] = [
-  { id: 'LIB-01', x: 60, y: 40, width: 40, height: 30, available: true, hasPower: true, hasAC: true, isSilent: true },
-  { id: 'LIB-02', x: 110, y: 40, width: 40, height: 30, available: false, hasPower: true, hasAC: true, isSilent: true },
-  { id: 'LIB-03', x: 160, y: 40, width: 40, height: 30, available: true, hasPower: false, hasAC: true, isSilent: true },
-  { id: 'LIB-04', x: 210, y: 40, width: 40, height: 30, available: true, hasPower: true, hasAC: false, isSilent: false },
-  { id: 'LIB-05', x: 60, y: 90, width: 40, height: 30, available: false, hasPower: true, hasAC: true, isSilent: true },
-  { id: 'LIB-06', x: 110, y: 90, width: 40, height: 30, available: true, hasPower: true, hasAC: false, isSilent: false },
-  { id: 'LIB-07', x: 160, y: 90, width: 40, height: 30, available: true, hasPower: false, hasAC: true, isSilent: true },
-  { id: 'LIB-08', x: 210, y: 90, width: 40, height: 30, available: false, hasPower: true, hasAC: true, isSilent: false },
-  { id: 'LIB-09', x: 60, y: 140, width: 40, height: 30, available: true, hasPower: true, hasAC: true, isSilent: true },
-  { id: 'LIB-10', x: 110, y: 140, width: 40, height: 30, available: true, hasPower: false, hasAC: false, isSilent: false },
-  { id: 'LIB-11', x: 160, y: 140, width: 40, height: 30, available: false, hasPower: true, hasAC: true, isSilent: true },
-  { id: 'LIB-12', x: 210, y: 140, width: 40, height: 30, available: true, hasPower: true, hasAC: true, isSilent: false },
+interface Room {
+  id: string;
+  name: string;
+  location: string;
+  access: 'general' | 'premium';
+  desks: Desk[];
+}
+
+const generateDesks = (seedStr: string): Desk[] => {
+  const letters = ['a', 'b', 'c', 'd'];
+  const newDesks: Desk[] = [];
+  let seed = 0;
+  for (let i = 0; i < seedStr.length; i++) {
+    seed += seedStr.charCodeAt(i);
+  }
+  for (let i = 1; i <= 4; i++) {
+    for (const letter of letters) {
+      const id = `${i}${letter}`;
+      const charCode = seed + id.charCodeAt(0) + id.charCodeAt(1);
+      newDesks.push({
+        id,
+        x: 0,
+        y: 0,
+        width: 40,
+        height: 30,
+        available: charCode % 3 !== 0,
+        hasPower: charCode % 2 === 0,
+        hasAC: charCode % 4 !== 0,
+        isSilent: charCode % 5 !== 0,
+      });
+    }
+  }
+  return newDesks;
+};
+
+const rooms: Room[] = [
+  {
+    id: 'situation-room',
+    name: 'Situation Room',
+    location: 'COMSS lecturer first floor',
+    access: 'general',
+    desks: generateDesks('situation'),
+  },
+  {
+    id: 'seminar-room-blue',
+    name: 'Seminar Room (Blue)',
+    location: 'COMSS ground floor',
+    access: 'premium',
+    desks: generateDesks('blue'),
+  },
+  {
+    id: 'seminar-room-red',
+    name: 'Seminar Room (Red)',
+    location: 'COMSS ground floor',
+    access: 'premium',
+    desks: generateDesks('red'),
+  },
+  {
+    id: 'calt',
+    name: 'CALT',
+    location: 'COMSS',
+    access: 'general',
+    desks: generateDesks('calt'),
+  },
 ];
 
 const filters = [
@@ -40,8 +91,12 @@ const filters = [
 
 export default function SpatialMap() {
   const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set());
+  const [selectedRoomId, setSelectedRoomId] = useState<string>(rooms[0].id);
   const sectionRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  const currentRoom = rooms.find((r) => r.id === selectedRoomId) || rooms[0];
+  const currentDesks = currentRoom.desks;
 
   const toggleFilter = (key: string) => {
     setActiveFilters((prev) => {
@@ -144,19 +199,19 @@ export default function SpatialMap() {
             <div className="mt-10 grid grid-cols-3 gap-6">
               <div>
                 <div className="text-3xl font-mono font-bold text-teal">
-                  {desks.filter((d) => d.available).length}
+                  {currentDesks.filter((d) => d.available).length}
                 </div>
                 <div className="text-white/40 text-sm mt-1">Available</div>
               </div>
               <div>
                 <div className="text-3xl font-mono font-bold text-white/70">
-                  {desks.filter((d) => !d.available).length}
+                  {currentDesks.filter((d) => !d.available).length}
                 </div>
                 <div className="text-white/40 text-sm mt-1">Occupied</div>
               </div>
               <div>
                 <div className="text-3xl font-mono font-bold text-white">
-                  {desks.length}
+                  {currentDesks.length}
                 </div>
                 <div className="text-white/40 text-sm mt-1">Total Desks</div>
               </div>
@@ -172,16 +227,30 @@ export default function SpatialMap() {
               {/* Architectural Grid Background */}
               <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
 
-              <div className="relative flex items-center justify-between mb-8">
-                <div>
-                  <h3 className="font-geist font-semibold text-white text-xl">
-                    LIB Floor 1 — East Wing
-                  </h3>
-                  <p className="text-white/50 text-sm mt-1">
-                    Select an available desk to book
-                  </p>
+              <div className="relative flex items-start justify-between mb-8 gap-4 flex-col sm:flex-row">
+                <div className="flex-1 w-full">
+                  <select 
+                    value={selectedRoomId}
+                    onChange={(e) => setSelectedRoomId(e.target.value)}
+                    className="bg-[#0A1124] border border-white/20 text-white text-lg font-geist font-semibold rounded-xl px-4 py-2 focus:outline-none focus:border-teal/50 transition-colors w-full sm:w-auto cursor-pointer appearance-none"
+                    style={{ WebkitAppearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem top 50%', backgroundSize: '0.65rem auto', paddingRight: '2.5rem' }}
+                  >
+                    {rooms.map(room => (
+                      <option key={room.id} value={room.id} className="bg-[#0A1124] text-white">
+                        {room.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="flex items-center gap-2 mt-3 flex-wrap">
+                    <p className="text-white/50 text-sm">
+                      {currentRoom.location}
+                    </p>
+                    <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${currentRoom.access === 'premium' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-white/5 text-white/50 border border-white/10'}`}>
+                      {currentRoom.access === 'premium' ? 'Premium Users Only' : 'General Access'}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 bg-teal/10 border border-teal/20 rounded-full px-4 py-2">
+                <div className="flex items-center gap-2 bg-teal/10 border border-teal/20 rounded-full px-4 py-2 shrink-0">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-teal"></span>
@@ -192,7 +261,7 @@ export default function SpatialMap() {
 
               {/* HTML Grid Floor Plan */}
               <div className="relative grid grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
-                {desks.map((desk) => {
+                {currentDesks.map((desk) => {
                   const visible = isDeskVisible(desk);
                   return (
                     <div
@@ -207,8 +276,8 @@ export default function SpatialMap() {
                     >
                       {/* Desk Header */}
                       <div className="flex justify-between items-start">
-                        <span className="font-mono text-[10px] sm:text-xs font-bold text-white/90">
-                          {desk.id.replace('LIB-', '')}
+                        <span className="font-mono text-[10px] sm:text-xs font-bold text-white/90 uppercase">
+                          {desk.id}
                         </span>
                         <span
                           className={`w-2 h-2 rounded-full shadow-[0_0_8px] ${

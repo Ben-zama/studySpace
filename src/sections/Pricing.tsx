@@ -92,7 +92,7 @@ export default function Pricing() {
     <section
       id="pricing"
       ref={sectionRef}
-      className="relative py-20 lg:py-28"
+      className="relative py-32 lg:py-40"
       style={{
         zIndex: 2,
         background: '#F5F7FA',

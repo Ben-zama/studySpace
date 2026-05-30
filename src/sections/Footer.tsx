@@ -78,7 +78,7 @@ export default function Footer() {
                 <Download size={16} />
                 Download Venture Proposal
               </button>
-              <button className="border border-white/30 text-white font-semibold px-6 py-3.5 rounded-full flex items-center justify-center gap-2 hover:bg-white/10 transition-all text-sm">
+              <button onClick={() => window.location.href = 'mailto:your.studyspace.gmail.com'} className="border border-white/30 text-white font-semibold px-6 py-3.5 rounded-full flex items-center justify-center gap-2 hover:bg-white/10 transition-all text-sm">
                 <Mail size={16} />
                 Contact Team
               </button>
@@ -87,11 +87,11 @@ export default function Footer() {
             <div className="mt-10 flex flex-col md:flex-row items-center gap-8 text-white/40 text-sm">
               <span className="flex items-center gap-2">
                 <Phone size={14} />
-                +234 800 STUDYSPACE
+                +234 903 1128 162
               </span>
               <span className="flex items-center gap-2">
                 <MapPin size={14} />
-                Lagos, Nigeria
+                Bowen University, Nigeria
               </span>
             </div>
           </div>

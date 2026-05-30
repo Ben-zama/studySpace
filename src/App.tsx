@@ -1,14 +1,14 @@
 // @ts-expect-error - Silk component lacks type definitions
 import Silk from "./components/Silk";
 import Navbar from "./sections/Navbar";
-import Hero from "./sections/Hero";
-import SpatialMap from "./sections/SpatialMap";
-import Pricing from "./sections/Pricing";
-import Marketplace from "./sections/Marketplace";
-import GreenStudy from "./sections/GreenStudy";
-import Footer from "./sections/Footer";
+import { Routes, Route, useLocation } from "react-router";
+import Home from "./pages/Home";
+import { AuthPage } from "./pages/AuthPage";
 
 export default function App() {
+  const location = useLocation();
+  const isAuthPage = location.pathname === '/auth';
+
   return (
     <div className="relative min-h-screen w-full overflow-x-auto">
       {/* Global Silk background */}
@@ -23,17 +23,13 @@ export default function App() {
       </div>
 
       {/* Fixed navigation */}
-      <Navbar />
+      {!isAuthPage && <Navbar />}
 
       {/* Page sections */}
-      <main>
-        <Hero />
-        <SpatialMap />
-        <Pricing />
-        <Marketplace />
-        <GreenStudy />
-        <Footer />
-      </main>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/auth" element={<AuthPage />} />
+      </Routes>
     </div>
   );
 }
