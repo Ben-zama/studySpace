@@ -78,7 +78,7 @@ export default function Footer() {
                 <Download size={16} />
                 Download Venture Proposal
               </button>
-              <button onClick={() => window.location.href = 'mailto:your.studyspace.gmail.com'} className="border border-white/30 text-white font-semibold px-6 py-3.5 rounded-full flex items-center justify-center gap-2 hover:bg-white/10 transition-all text-sm">
+              <button onClick={() => window.location.href = 'mailto:[your.studyspace@gmail.com]'} className="border border-white/30 text-white font-semibold px-6 py-3.5 rounded-full flex items-center justify-center gap-2 hover:bg-white/10 transition-all text-sm">
                 <Mail size={16} />
                 Contact Team
               </button>

@@ -260,7 +260,7 @@ export default function SpatialMap() {
               </div>
 
               {/* HTML Grid Floor Plan */}
-              <div className="relative grid grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+              <div className="relative grid grid-cols-4 gap-3 sm:gap-4">
                 {currentDesks.map((desk) => {
                   const visible = isDeskVisible(desk);
                   return (
